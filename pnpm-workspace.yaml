@@ -1,0 +1,6 @@
+allowBuilds:
+  esbuild: true
+  # 与 trpg 保持一致：msgpackr-extract 是 msgpackr 的可选 native 加速器，编译它会引入
+  # 平台相关的二进制产物，破坏 story 模块「纯 JS、浏览器可用」的前提。
+  # msgpackr 缺少该加速器时自动 fallback 到纯 JS 实现，编解码结果完全一致。
+  msgpackr-extract: false
