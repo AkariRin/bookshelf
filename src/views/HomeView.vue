@@ -2,7 +2,7 @@
 <template>
   <v-container class="py-8" style="max-width: 720px">
     <div class="text-center mb-8">
-      <v-icon size="48" color="primary">mdi-bookshelf</v-icon>
+      <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48">
       <h1 class="text-h4 font-weight-bold mt-2">Bookshelf</h1>
       <p class="text-body-2 text-medium-emphasis mt-1">跑团日志阅读器</p>
     </div>

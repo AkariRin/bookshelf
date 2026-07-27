@@ -6,7 +6,7 @@
 <template>
   <v-app-bar color="primary" flat :elevation="1">
     <v-btn v-if="showBack" icon="mdi-arrow-left" @click="router.push('/')" />
-    <v-icon v-else class="ms-4" size="24">mdi-bookshelf</v-icon>
+    <img v-else src="/pwa-192x192.png" alt="Bookshelf" width="24" height="24" class="ms-4">
     <v-app-bar-title class="font-weight-medium">
       {{ title }}
     </v-app-bar-title>
