@@ -88,7 +88,7 @@ import { toDisplayEntries } from '@/composables/useStoryIndex'
 import { useReaderChrome } from '@/composables/useReaderChrome'
 import { useSettingsStore } from '@/stores/settings'
 
-const props = defineProps<{ source: 'r2' | 'local' }>()
+const props = defineProps<{ source: 's3' | 'local' }>()
 
 const route = useRoute()
 const router = useRouter()
@@ -103,7 +103,7 @@ const {
   doc,
   isEncrypted,
   isBusy,
-  loadFromR2,
+  loadFromS3,
   loadFromFile,
   submitPassword,
 } = useStoryLoader()
@@ -114,7 +114,7 @@ const name = computed(() => {
 })
 
 // 本地来源无法重试：File 已被消费，重新加载需用户再次选择
-const canRetry = computed(() => props.source === 'r2')
+const canRetry = computed(() => props.source === 's3')
 
 const entries = computed(() => (doc.value ? toDisplayEntries(doc.value) : []))
 
@@ -131,8 +131,8 @@ watch(
 onUnmounted(resetChrome)
 
 function load() {
-  if (props.source === 'r2') {
-    void loadFromR2(name.value)
+  if (props.source === 's3') {
+    void loadFromS3(name.value)
     return
   }
   const file = takeFile()
@@ -144,7 +144,7 @@ onMounted(load)
 
 // 同一路由下切换日志名（如从收藏直接跳转）需重新加载
 watch(name, () => {
-  if (props.source === 'r2') load()
+  if (props.source === 's3') load()
 })
 </script>
 

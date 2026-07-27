@@ -13,12 +13,12 @@ vi.mock('@/services/storyClient', async () => {
   return { ...actual, unpackStoryBytes: unpackMock }
 })
 
-const fetchMock = vi.hoisted(() => vi.fn<typeof import('@/services/storySource').fetchFromR2>())
+const fetchMock = vi.hoisted(() => vi.fn<typeof import('@/services/storySource').fetchFromS3>())
 vi.mock('@/services/storySource', async () => {
   const actual = await vi.importActual<typeof import('@/services/storySource')>(
     '@/services/storySource',
   )
-  return { ...actual, fetchFromR2: fetchMock }
+  return { ...actual, fetchFromS3: fetchMock }
 })
 
 const { useStoryLoader } = await import('@/composables/useStoryLoader')
@@ -36,13 +36,13 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('useStoryLoader / R2 路径', () => {
+describe('useStoryLoader / S3 路径', () => {
   it('成功后进入 ready 并持有文档', async () => {
     fetchMock.mockResolvedValue(BYTES)
     unpackMock.mockResolvedValue({ doc: DOC, encrypted: false })
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.state.value).toBe('ready')
     expect(loader.doc.value).toEqual(DOC)
@@ -53,7 +53,7 @@ describe('useStoryLoader / R2 路径', () => {
     fetchMock.mockRejectedValue(new StorySourceError('not-found', 'x'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('深海余烬')
+    await loader.loadFromS3('深海余烬')
 
     expect(loader.state.value).toBe('error')
     expect(loader.errorMessage.value).toContain('深海余烬')
@@ -64,7 +64,7 @@ describe('useStoryLoader / R2 路径', () => {
     fetchMock.mockRejectedValue(new StorySourceError('network', 'x'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.errorMessage.value).toContain('网络')
     expect(loader.errorMessage.value).toContain('跨域')
@@ -74,7 +74,7 @@ describe('useStoryLoader / R2 路径', () => {
     fetchMock.mockRejectedValue(new StorySourceError('no-endpoint', 'x'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.errorMessage.value).toContain('本地文件')
   })
@@ -83,7 +83,7 @@ describe('useStoryLoader / R2 路径', () => {
     fetchMock.mockRejectedValue(new DOMException('Aborted', 'AbortError'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     // 中止发生在导航离开时，覆写状态会在已卸载的视图上闪出错误
     expect(loader.state.value).not.toBe('error')
@@ -96,7 +96,7 @@ describe('useStoryLoader / 加密流程', () => {
     unpackMock.mockRejectedValue(new StoryUnpackError('need-password', '该日志已加密'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.state.value).toBe('need-password')
     expect(loader.isEncrypted.value).toBe(true)
@@ -108,7 +108,7 @@ describe('useStoryLoader / 加密流程', () => {
     unpackMock.mockRejectedValueOnce(new StoryUnpackError('need-password', '已加密'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     unpackMock.mockRejectedValueOnce(new StoryUnpackError('decrypt', '口令错误'))
     await loader.submitPassword('wrongpass')
@@ -122,7 +122,7 @@ describe('useStoryLoader / 加密流程', () => {
     unpackMock.mockRejectedValueOnce(new StoryUnpackError('need-password', '已加密'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true })
     await loader.submitPassword('correctpass')
@@ -136,7 +136,7 @@ describe('useStoryLoader / 加密流程', () => {
     unpackMock.mockRejectedValueOnce(new StoryUnpackError('need-password', '已加密'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
     expect(fetchMock).toHaveBeenCalledTimes(1)
 
     unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true })
@@ -152,7 +152,7 @@ describe('useStoryLoader / 解析失败', () => {
     unpackMock.mockRejectedValue(new StoryUnpackError('format', 'magic 不匹配'))
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.state.value).toBe('error')
     expect(loader.errorMessage.value).toContain('.story')
@@ -165,7 +165,7 @@ describe('useStoryLoader / 解析失败', () => {
     )
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
 
     expect(loader.errorMessage.value).toContain('版本')
   })
@@ -196,7 +196,7 @@ describe('useStoryLoader / reset', () => {
     unpackMock.mockResolvedValue({ doc: DOC, encrypted: false })
 
     const loader = useStoryLoader()
-    await loader.loadFromR2('a')
+    await loader.loadFromS3('a')
     loader.reset()
 
     expect(loader.state.value).toBe('idle')

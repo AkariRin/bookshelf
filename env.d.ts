@@ -10,10 +10,10 @@
 
 interface ImportMetaEnv {
   /**
-   * Cloudflare R2 的公开读取端点，不含结尾斜杠。
+   * S3 兼容存储的公开读取端点，不含结尾斜杠。
    * 例：https://story.example.com 或 https://pub-xxxx.r2.dev
    */
-  readonly VITE_R2_ENDPOINT?: string
+  readonly S3_ENDPOINT?: string
 }
 
 interface ImportMeta {

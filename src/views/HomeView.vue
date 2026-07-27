@@ -69,7 +69,7 @@
 import { ref, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { hasR2Endpoint } from '@/services/storySource'
+import { hasS3Endpoint } from '@/services/storySource'
 import { useLocalStoryFile } from '@/composables/useLocalStoryFile'
 
 const router = useRouter()
@@ -78,7 +78,7 @@ const { setFile } = useLocalStoryFile()
 
 const dragging = ref(false)
 const remoteName = ref('')
-const hasEndpoint = hasR2Endpoint()
+const hasEndpoint = hasS3Endpoint()
 
 function openLocal(file: File) {
   setFile(file)

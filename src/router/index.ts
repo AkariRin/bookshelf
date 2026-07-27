@@ -18,11 +18,11 @@ const router = createRouter({
       props: { source: 'local' },
     },
     {
-      // 通配是必要的：R2 key 可能含斜杠表示子目录，普通 :name 只匹配单段
+      // 通配是必要的：S3 key 可能含斜杠表示子目录，普通 :name 只匹配单段
       path: '/read/:name(.*)',
       name: 'read',
       component: ReaderView,
-      props: { source: 'r2' },
+      props: { source: 's3' },
     },
     {
       path: '/:pathMatch(.*)*',

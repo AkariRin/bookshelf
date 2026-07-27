@@ -1,4 +1,4 @@
-/** Vuetify 实例：mdi 图标集、中文 locale、以 aemeath 配色初始化的双主题。 */
+/** Vuetify 实例：mdi 图标集、中文 locale、以 bookshelf 配色初始化的双主题。 */
 import { createVuetify } from 'vuetify'
 import { zhHans } from 'vuetify/locale'
 

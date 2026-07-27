@@ -1,8 +1,8 @@
 /**
  * 配色主题注册表。
  *
- * 颜色 token 取自 aemeath-frontend 的 `aemeath` 主题，逐字保持一致——两个应用是同一产品家族，
- * 观感统一靠共用同一份取值，而非各自近似调色。
+ * 配色取自 Minecraft 经典书架（为附魔台提供加成的那个），
+ * 以橡木、羊皮纸和书脊色调构建暖色、学术感的阅读界面。
  */
 export interface ThemeColors {
   [key: string]: string
@@ -18,51 +18,68 @@ export interface ThemeDefinition {
 
 export const themes: ThemeDefinition[] = [
   {
-    id: 'aemeath',
-    name: '爱弥斯',
-    description: '远航星',
+    id: 'bookshelf',
+    name: '橡木书架',
+    description: 'Minecraft 经典书架配色',
+
+    /* ────── 浅色：羊皮纸底 + 橡木暖棕 + 书脊彩色点缀 ────── */
     light: {
-      primary: '#22DFF2',
-      secondary: '#E66A9F',
-      accent: '#F0B34A',
-      error: '#D62451',
-      info: '#1F8FE0',
-      success: '#16B8A6',
-      warning: '#E8935B',
-      background: '#FFF3F8',
-      surface: '#FFFFFF',
-      'on-primary': '#073040',
-      'on-secondary': '#3D0A20',
-      'on-accent': '#2B2005',
+      /* 品牌色 */
+      primary: '#8B6914',          // 橡木暖棕 — 主按钮 / AppBar / 焦点态
+      secondary: '#6B4226',        // 深木色 — 次要元素
+      accent: '#B8383A',           // 书脊红 — CTA 高亮
+      error: '#C0392B',            // 错误红
+      info: '#4A6B8A',             // 书脊蓝
+      success: '#4A7C3F',          // 书脊绿
+      warning: '#C8963A',          // 金色铭文 — 告警
+
+      /* 表面 */
+      background: '#FAF3E8',       // 羊皮纸底
+      surface: '#FFFBF5',          // 卡片/对话泡
+
+      /* On colors */
+      'on-primary': '#FFFFFF',
+      'on-secondary': '#FFFFFF',
+      'on-accent': '#FFFFFF',
       'on-error': '#FFFFFF',
-      'on-info': '#04152A',
-      'on-success': '#04201C',
+      'on-info': '#FFFFFF',
+      'on-success': '#FFFFFF',
       'on-warning': '#2B1B0A',
-      'on-background': '#1A1A2E',
-      'on-surface': '#1E293B',
-      'gradient-blue': 'linear-gradient(135deg, #22DFF2 0%, #64FFDA 100%)',
-      'gradient-pink': 'linear-gradient(135deg, #E66A9F 0%, #FFD1DC 100%)',
+      'on-background': '#2C1810',
+      'on-surface': '#2C1810',
+
+      /* 渐变 */
+      'gradient-bookshelf': 'linear-gradient(135deg, #C8963A 0%, #8B6914 100%)',
     },
+
+    /* ────── 深色：暗木质感 + 暖金主色 + 柔和书脊色调 ────── */
     dark: {
-      primary: '#3FFEFB',
-      secondary: '#F595C2',
-      accent: '#FFC873',
-      error: '#FF6F91',
-      info: '#4FC3F7',
-      success: '#2FE0C9',
-      warning: '#FFB26B',
-      background: '#100E33',
-      surface: '#1B1846',
-      'on-primary': '#052A2E',
-      'on-secondary': '#341A26',
-      'on-accent': '#2B2005',
-      'on-error': '#341018',
-      'on-info': '#052030',
-      'on-success': '#052A26',
-      'on-warning': '#2B1B0A',
-      'on-background': '#E2E8F0',
-      'on-surface': '#CBD5E1',
-      'gradient-space': 'linear-gradient(180deg, #100E33 0%, #241A5A 100%)',
+      /* 品牌色 */
+      primary: '#D4A854',          // 暖金 — 附魔光晕感
+      secondary: '#8B6B4A',        // 陈年橡木
+      accent: '#D4656B',           // 柔和书脊红
+      error: '#E05555',            // 深色模式下更柔和的错误红
+      info: '#6B9EBF',             // 柔和书脊蓝
+      success: '#6BA86B',          // 柔和书脊绿
+      warning: '#D4B45A',          // 柔金
+
+      /* 表面 */
+      background: '#1A1410',       // 暗木纹理底
+      surface: '#241D15',          // 深木色卡片
+
+      /* On colors */
+      'on-primary': '#1A1410',
+      'on-secondary': '#FFFFFF',
+      'on-accent': '#1A1410',
+      'on-error': '#FFFFFF',
+      'on-info': '#FFFFFF',
+      'on-success': '#FFFFFF',
+      'on-warning': '#1A1410',
+      'on-background': '#F0E8D8',
+      'on-surface': '#F0E8D8',
+
+      /* 渐变 */
+      'gradient-enchant': 'linear-gradient(180deg, #1A1410 0%, #2E1F30 100%)',
     },
   },
 ]

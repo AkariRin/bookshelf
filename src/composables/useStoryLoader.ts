@@ -7,7 +7,7 @@
 import { computed, ref, shallowRef } from 'vue'
 import type { StoryDocument } from '@aemeath-projects/trpg/story'
 
-import { StorySourceError, fetchFromR2, readLocalFile } from '@/services/storySource'
+import { StorySourceError, fetchFromS3, readLocalFile } from '@/services/storySource'
 import { StoryUnpackError, unpackStoryBytes } from '@/services/storyClient'
 
 export type LoaderState =
@@ -118,15 +118,15 @@ export function useStoryLoader() {
     }
   }
 
-  /** 从 R2 按名称加载。 */
-  async function loadFromR2(name: string) {
+  /** 从 S3 按名称加载。 */
+  async function loadFromS3(name: string) {
     reset()
     controller = new AbortController()
     state.value = 'fetching'
 
     let bytes: Uint8Array
     try {
-      bytes = await fetchFromR2(name, controller.signal)
+      bytes = await fetchFromS3(name, controller.signal)
     } catch (err) {
       // 主动取消：调用方已在导航离开，不该覆写状态
       if (err instanceof DOMException && err.name === 'AbortError') return
@@ -183,7 +183,7 @@ export function useStoryLoader() {
     doc,
     isEncrypted,
     isBusy,
-    loadFromR2,
+    loadFromS3,
     loadFromFile,
     submitPassword,
     reset,

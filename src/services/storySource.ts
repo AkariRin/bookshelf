@@ -2,7 +2,7 @@
  * 归档字节的获取层。
  *
  * 本层只负责「拿到 Uint8Array」，不认识 .story 的容器格式——解析是 worker 的职责。
- * 这样以后 R2 从公开直连改为 Worker 预签名，只需改动本文件。
+ * 这样以后 S3 从公开直连改为 Worker 预签名，只需改动本文件。
  */
 import { STORY_EXTENSION } from '@aemeath-projects/trpg/story'
 
@@ -36,26 +36,26 @@ export class StorySourceError extends Error {
   }
 }
 
-/** R2 端点，未配置时为空串。 */
-export function getR2Endpoint(): string {
-  return (import.meta.env.VITE_R2_ENDPOINT ?? '').replace(/\/+$/, '')
+/** S3 端点，未配置时为空串。 */
+export function getS3Endpoint(): string {
+  return (import.meta.env.S3_ENDPOINT ?? '').replace(/\/+$/, '')
 }
 
-export function hasR2Endpoint(): boolean {
-  return getR2Endpoint() !== ''
+export function hasS3Endpoint(): boolean {
+  return getS3Endpoint() !== ''
 }
 
 /**
- * 把路由参数拼成 R2 对象 URL。
+ * 把路由参数拼成 S3 对象 URL。
  *
  * 逐段 encodeURIComponent 而非整体编码：key 可能含中文（需编码）也可能含斜杠表示子目录
  * （不能编码，否则 %2F 会被当作字面量而非路径分隔）。
  * 已带 .story 后缀时不重复追加，使直接粘贴完整文件名的地址也能工作。
  */
-export function buildR2Url(name: string): string {
-  const endpoint = getR2Endpoint()
+export function buildS3Url(name: string): string {
+  const endpoint = getS3Endpoint()
   if (endpoint === '') {
-    throw new StorySourceError('no-endpoint', '未配置 R2 端点（VITE_R2_ENDPOINT）')
+    throw new StorySourceError('no-endpoint', '未配置 S3 端点（S3_ENDPOINT）')
   }
 
   const key = name.endsWith(STORY_EXTENSION) ? name : `${name}${STORY_EXTENSION}`
@@ -64,14 +64,14 @@ export function buildR2Url(name: string): string {
 }
 
 /**
- * 从 R2 取归档字节。
+ * 从 S3 取归档字节。
  *
  * @param name 路由参数中的日志名，不含 .story 后缀
  * @param signal 用于在组件卸载或重新导航时中止请求
  * @throws {StorySourceError}
  */
-export async function fetchFromR2(name: string, signal?: AbortSignal): Promise<Uint8Array> {
-  const url = buildR2Url(name)
+export async function fetchFromS3(name: string, signal?: AbortSignal): Promise<Uint8Array> {
+  const url = buildS3Url(name)
 
   let res: Response
   try {

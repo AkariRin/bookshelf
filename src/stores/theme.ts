@@ -1,4 +1,4 @@
-/** 主题偏好（亮色/暗色/跟随系统）的状态管理，结构沿用 aemeath-frontend 以保持行为一致。 */
+/** 主题偏好（亮色/暗色/跟随系统）的状态管理。 */
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useTheme } from 'vuetify'
@@ -21,7 +21,7 @@ function resolveTheme(preference: ThemePreference): string {
 export const useThemeStore = defineStore(
   'theme',
   () => {
-    const theme = ref('aemeath')
+    const theme = ref('bookshelf')
     const preference = ref<ThemePreference>('followOS')
 
     function applyThemeColors(vuetifyTheme: ReturnType<typeof useTheme>) {
