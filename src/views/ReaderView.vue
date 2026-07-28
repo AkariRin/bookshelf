@@ -1,122 +1,126 @@
 <!-- 阅读页：加载 / 口令 / 错误 / 正文四种形态。 -->
 <template>
   <div class="reader d-flex flex-column">
-    <!-- 加载中：骨架屏，结构模拟正文的三层区域 -->
-    <div v-if="isBusy" class="flex-grow-1 d-flex flex-column">
+    <!-- 加载中：骨架屏，结构与正文完全一致，避免额外 DOM 层级导致错位 -->
+    <template v-if="isBusy">
       <!-- 团信息栏骨架 -->
       <div class="party-info-bar d-flex align-center ga-3 px-4 py-2">
-        <v-skeleton-loader type="text" width="140" height="18" />
-        <v-skeleton-loader type="text" width="72" height="16" />
-        <v-skeleton-loader type="text" width="56" height="16" />
-        <v-skeleton-loader type="text" width="100" height="16" />
+        <div class="skel-bar" style="width: 140px; height: 18px" />
+        <div class="skel-bar" style="width: 72px; height: 16px" />
+        <div class="skel-bar" style="width: 56px; height: 16px" />
+        <div class="skel-bar" style="width: 100px; height: 16px" />
       </div>
 
       <v-divider />
 
       <!-- 人物卡栏骨架 -->
       <div class="character-bar d-flex align-center ga-2 px-4 py-2">
-        <v-skeleton-loader type="text" width="52" height="14" class="mr-1" />
-        <v-skeleton-loader v-for="n in 4" :key="n" type="chip" width="72" height="24" />
+        <div class="skel-bar" style="width: 52px; height: 14px" />
+        <div v-for="n in 4" :key="n" class="skel-chip" style="width: 72px; height: 24px" />
       </div>
 
       <v-divider />
 
       <!-- 条目时间线骨架 -->
-      <div class="flex-grow-1" style="min-height: 0">
+      <div class="timeline-wrap flex-grow-1">
         <v-container style="max-width: 800px" class="py-2">
           <div class="text-body-2 text-medium-emphasis mb-3">
             {{ state === 'fetching' ? '正在获取日志…' : '正在解析…' }}
           </div>
           <div v-for="n in 6" :key="n" class="d-flex ga-3 py-2">
-            <v-skeleton-loader type="avatar" width="36" height="36" class="flex-grow-0" />
+            <div class="skel-circle" style="width: 36px; height: 36px" />
             <div class="flex-grow-1">
-              <v-skeleton-loader type="text" width="72" height="14" class="mb-1" />
-              <v-skeleton-loader type="text" :width="n % 3 === 0 ? '60%' : '100%'" height="14" />
-              <v-skeleton-loader
-                type="text"
-                :width="n % 2 === 0 ? '45%' : '85%'"
-                height="14"
-                class="mt-1"
+              <div class="skel-bar mb-1" style="width: 72px; height: 14px" />
+              <div
+                class="skel-bar"
+                :style="{ width: n % 3 === 0 ? '60%' : '100%', height: '14px' }"
+              />
+              <div
+                class="skel-bar mt-1"
+                :style="{ width: n % 2 === 0 ? '45%' : '85%', height: '14px' }"
               />
             </div>
           </div>
         </v-container>
       </div>
-    </div>
+    </template>
 
     <!-- 需要口令 -->
-    <div v-else-if="state === 'need-password'" class="flex-grow-1 d-flex align-center pa-4">
-      <v-card class="mx-auto flex-grow-1" max-width="420">
-        <v-card-item>
-          <div class="d-flex align-center ga-2">
-            <v-icon color="secondary">mdi-lock-outline</v-icon>
-            <span class="text-subtitle-1 font-weight-medium">此日志已加密</span>
-          </div>
-        </v-card-item>
-        <v-card-text>
-          <p class="text-body-2 text-medium-emphasis mb-4">输入口令以阅读内容。</p>
-          <v-form @submit.prevent="doSubmitPassword">
-            <v-text-field
-              v-model="passwordInput"
-              :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-              :type="passwordVisible ? 'text' : 'password'"
-              :error-messages="passwordError"
-              :hint="`至少 ${MIN_PASSWORD_LENGTH} 个字符`"
-              autofocus
-              label="口令"
-              variant="outlined"
-              @click:append-inner="passwordVisible = !passwordVisible"
-            />
-            <v-btn
-              :disabled="!canSubmitPassword"
-              :loading="false"
-              block
-              color="primary"
-              type="submit"
-              class="mt-2"
-            >
-              解锁
-            </v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
+    <div v-else-if="state === 'need-password'" class="flex-grow-1 d-flex align-center justify-center pa-4">
+      <div style="max-width: 420px; width: 100%">
+        <v-empty-state class="password-empty-state">
+          <template #media>
+            <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48" />
+          </template>
+          <template #title>
+            <h1 class="text-h4 font-weight-bold">此日志已加密</h1>
+          </template>
+          <template #text>
+            <p class="text-body-2 text-medium-emphasis">输入口令以阅读内容。</p>
+          </template>
+          <template #default>
+            <v-form @submit.prevent="doSubmitPassword">
+              <v-text-field
+                v-model="passwordInput"
+                :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="passwordVisible ? 'text' : 'password'"
+                :error-messages="passwordError"
+                :hint="`至少 ${MIN_PASSWORD_LENGTH} 个字符`"
+                autofocus
+                label="密码"
+                variant="underlined"
+                @click:append-inner="passwordVisible = !passwordVisible"
+              />
+              <v-btn
+                :disabled="!canSubmitPassword"
+                block
+                color="primary"
+                type="submit"
+                class="mt-2"
+              >
+                解密
+              </v-btn>
+            </v-form>
+          </template>
+        </v-empty-state>
+      </div>
     </div>
 
     <!-- 出错 -->
     <div v-else-if="state === 'error'" class="flex-grow-1 d-flex align-center justify-center pa-4">
-      <v-card class="mx-auto" max-width="440">
-        <v-card-item>
-          <div class="d-flex align-center ga-2">
-            <v-icon color="error">mdi-alert-circle-outline</v-icon>
-            <span class="text-subtitle-1 font-weight-medium">无法打开</span>
-          </div>
-        </v-card-item>
-        <v-card-text class="text-body-2">{{ errorMessage }}</v-card-text>
-        <v-card-actions>
+      <v-empty-state>
+        <template #media>
+          <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48" />
+        </template>
+        <template #title>
+          <h1 class="text-h4 font-weight-bold">无法打开</h1>
+        </template>
+        <template #text>
+          <p class="text-body-2 text-medium-emphasis">{{ errorMessage }}</p>
+        </template>
+        <template #actions>
           <v-btn variant="text" @click="router.push('/')">返回首页</v-btn>
-          <v-spacer />
           <v-btn v-if="canRetry" color="primary" variant="tonal" @click="load">重试</v-btn>
-        </v-card-actions>
-      </v-card>
+        </template>
+      </v-empty-state>
     </div>
 
     <!-- 本地文件已失效（刷新后 File 丢失） -->
     <div v-else-if="state === 'idle'" class="flex-grow-1 d-flex align-center justify-center pa-4">
-      <v-card class="mx-auto" max-width="420">
-        <v-card-item>
-          <div class="d-flex align-center ga-2">
-            <v-icon color="info">mdi-file-question-outline</v-icon>
-            <span class="text-subtitle-1 font-weight-medium">请重新选择文件</span>
-          </div>
-        </v-card-item>
-        <v-card-text class="text-body-2 text-medium-emphasis">
-          本地文件只在打开期间保留在内存中，刷新页面后需要重新选择。
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
+      <v-empty-state>
+        <template #media>
+          <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48" />
+        </template>
+        <template #title>
+          <h1 class="text-h4 font-weight-bold">请重新选择文件</h1>
+        </template>
+        <template #text>
+          <p class="text-body-2 text-medium-emphasis">本地文件只在打开期间保留在内存中，刷新页面后需要重新选择。</p>
+        </template>
+        <template #actions>
           <v-btn color="primary" variant="tonal" @click="router.push('/')">回到首页</v-btn>
-        </v-card-actions>
-      </v-card>
+        </template>
+      </v-empty-state>
     </div>
 
     <!-- 正文 -->
@@ -561,5 +565,57 @@ watch(name, () => {
   background: rgba(var(--v-theme-on-surface), 0.04);
   border-radius: 6px;
   padding: 4px 8px;
+}
+
+/* v-empty-state 的 content 区域默认不撑满，导致内部表单被挤窄 */
+.password-empty-state :deep(.v-empty-state__content) {
+  width: 100%;
+}
+
+/* ---- 骨架屏（自定义元素，避免 v-skeleton-loader 内置固定尺寸/margin 干扰布局）---- */
+.skel-bar,
+.skel-chip,
+.skel-circle {
+  background: rgba(var(--v-theme-on-surface), var(--v-border-opacity));
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.skel-bar {
+  border-radius: 4px;
+}
+
+.skel-chip {
+  border-radius: 12px;
+}
+
+.skel-circle {
+  border-radius: 50%;
+}
+
+/* 微光动画 */
+.skel-bar::after,
+.skel-chip::after,
+.skel-circle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--v-theme-on-surface), 0.05) 40%,
+    rgba(var(--v-theme-on-surface), 0.08) 50%,
+    rgba(var(--v-theme-on-surface), 0.05) 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: skel-shimmer 1.5s infinite;
+}
+
+@keyframes skel-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 </style>
