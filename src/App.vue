@@ -2,8 +2,9 @@
   <v-app>
     <!-- 顶部应用栏 -->
     <v-app-bar color="primary" flat :elevation="1">
-      <v-btn v-if="showBack" icon="mdi-arrow-left" @click="router.push('/')" />
-      <img v-else src="/pwa-192x192.png" alt="Bookshelf" width="24" height="24" class="ms-4" />
+      <a href="/" class="logo-link ms-4" @click.prevent="router.push('/')">
+        <img src="/pwa-192x192.png" alt="Bookshelf" width="24" height="24" />
+      </a>
       <v-app-bar-title class="font-weight-medium">
         {{ title }}
       </v-app-bar-title>
@@ -106,7 +107,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
@@ -114,7 +115,6 @@ import { useReaderChrome } from '@/composables/useReaderChrome'
 import { useThemeStore, type ThemePreference } from '@/stores/theme'
 import { useSettingsStore } from '@/stores/settings'
 
-const route = useRoute()
 const router = useRouter()
 const vuetifyTheme = useTheme()
 const themeStore = useThemeStore()
@@ -122,7 +122,6 @@ const settings = useSettingsStore()
 const { title } = useReaderChrome()
 const { needRefresh, offlineReady, updateServiceWorker } = useRegisterSW()
 
-const showBack = computed(() => route.name !== 'home')
 const dialogOpen = ref(false)
 
 const themePreference = computed({
@@ -155,5 +154,11 @@ body,
 
 .main-fill > .v-main__wrap {
   height: 100%;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 </style>

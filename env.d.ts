@@ -13,7 +13,7 @@ interface ImportMetaEnv {
    * S3 兼容存储的公开读取端点，不含结尾斜杠。
    * 例：https://story.example.com 或 https://pub-xxxx.r2.dev
    */
-  readonly S3_ENDPOINT?: string
+  readonly VITE_S3_ENDPOINT?: string
 }
 
 interface ImportMeta {

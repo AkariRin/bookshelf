@@ -24,8 +24,10 @@
 
 ```bash
 cp .env.example .env
-# 编辑 .env，填入你的 S3 公开端点 URL
+# 编辑 .env，填入 VITE_S3_ENDPOINT 的值
 ```
+
+> **注意**：变量名必须以 `VITE_` 开头，Vite 构建时才会将其注入到客户端代码。
 
 配置后可在首页输入日志名称（不含 `.story` 后缀）直接打开。需在 S3 侧配置 CORS 允许本站域名。
 

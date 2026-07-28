@@ -38,7 +38,7 @@ export class StorySourceError extends Error {
 
 /** S3 端点，未配置时为空串。 */
 export function getS3Endpoint(): string {
-  return (import.meta.env.S3_ENDPOINT ?? '').replace(/\/+$/, '')
+  return (import.meta.env.VITE_S3_ENDPOINT ?? '').replace(/\/+$/, '')
 }
 
 export function hasS3Endpoint(): boolean {
@@ -55,7 +55,7 @@ export function hasS3Endpoint(): boolean {
 export function buildS3Url(name: string): string {
   const endpoint = getS3Endpoint()
   if (endpoint === '') {
-    throw new StorySourceError('no-endpoint', '未配置 S3 端点（S3_ENDPOINT）')
+    throw new StorySourceError('no-endpoint', '未配置 S3 端点（VITE_S3_ENDPOINT）')
   }
 
   const key = name.endsWith(STORY_EXTENSION) ? name : `${name}${STORY_EXTENSION}`

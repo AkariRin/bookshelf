@@ -4,9 +4,9 @@ import { StorySourceError, buildS3Url, fetchFromS3, readLocalFile } from '@/serv
 
 const ENDPOINT = 'https://pub-test.r2.dev'
 
-/** 覆写 S3_ENDPOINT。vi.stubEnv 会在 unstubAllEnvs 时还原。 */
+/** 覆写 VITE_S3_ENDPOINT。vi.stubEnv 会在 unstubAllEnvs 时还原。 */
 function withEndpoint(value: string) {
-  vi.stubEnv('S3_ENDPOINT', value)
+  vi.stubEnv('VITE_S3_ENDPOINT', value)
 }
 
 afterEach(() => {
