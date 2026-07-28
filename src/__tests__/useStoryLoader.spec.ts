@@ -5,19 +5,19 @@ import { StorySourceError } from '@/services/storySource'
 
 // worker 在 jsdom 下不可用（?worker 导入依赖 vite 的 worker 管线），
 // 故把 storyClient 整体替换掉——本组测试的对象是状态机的分支，不是解包本身
-const unpackMock = vi.hoisted(() => vi.fn<typeof import('@/services/storyClient').unpackStoryBytes>())
+const unpackMock = vi.hoisted(() =>
+  vi.fn<typeof import('@/services/storyClient').unpackStoryBytes>(),
+)
 vi.mock('@/services/storyClient', async () => {
-  const actual = await vi.importActual<typeof import('@/services/storyClient')>(
-    '@/services/storyClient',
-  )
+  const actual =
+    await vi.importActual<typeof import('@/services/storyClient')>('@/services/storyClient')
   return { ...actual, unpackStoryBytes: unpackMock }
 })
 
 const fetchMock = vi.hoisted(() => vi.fn<typeof import('@/services/storySource').fetchFromS3>())
 vi.mock('@/services/storySource', async () => {
-  const actual = await vi.importActual<typeof import('@/services/storySource')>(
-    '@/services/storySource',
-  )
+  const actual =
+    await vi.importActual<typeof import('@/services/storySource')>('@/services/storySource')
   return { ...actual, fetchFromS3: fetchMock }
 })
 
@@ -39,7 +39,7 @@ afterEach(() => {
 describe('useStoryLoader / S3 路径', () => {
   it('成功后进入 ready 并持有文档', async () => {
     fetchMock.mockResolvedValue(BYTES)
-    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false })
+    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false, version: 1, compression: 'none' })
 
     const loader = useStoryLoader()
     await loader.loadFromS3('a')
@@ -124,7 +124,7 @@ describe('useStoryLoader / 加密流程', () => {
     const loader = useStoryLoader()
     await loader.loadFromS3('a')
 
-    unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true })
+    unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true, version: 1, compression: 'none' })
     await loader.submitPassword('correctpass')
 
     expect(loader.state.value).toBe('ready')
@@ -139,7 +139,7 @@ describe('useStoryLoader / 加密流程', () => {
     await loader.loadFromS3('a')
     expect(fetchMock).toHaveBeenCalledTimes(1)
 
-    unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true })
+    unpackMock.mockResolvedValueOnce({ doc: DOC, encrypted: true, version: 1, compression: 'none' })
     await loader.submitPassword('correctpass')
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
@@ -173,7 +173,7 @@ describe('useStoryLoader / 解析失败', () => {
 
 describe('useStoryLoader / 本地文件', () => {
   it('成功后进入 ready', async () => {
-    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false })
+    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false, version: 1, compression: 'none' })
 
     const loader = useStoryLoader()
     await loader.loadFromFile(new File([BYTES], 'a.story'))
@@ -193,7 +193,7 @@ describe('useStoryLoader / 本地文件', () => {
 describe('useStoryLoader / reset', () => {
   it('清空文档与错误', async () => {
     fetchMock.mockResolvedValue(BYTES)
-    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false })
+    unpackMock.mockResolvedValue({ doc: DOC, encrypted: false, version: 1, compression: 'none' })
 
     const loader = useStoryLoader()
     await loader.loadFromS3('a')

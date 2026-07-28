@@ -28,6 +28,10 @@ export function useStoryLoader() {
   /** shallowRef：文档是大体积只读结构，深度响应式转换毫无收益且开销显著 */
   const doc = shallowRef<StoryDocument>()
   const isEncrypted = ref(false)
+  /** .story 容器格式版本号 */
+  const storyVersion = ref(0)
+  /** payload 压缩算法 */
+  const storyCompression = ref('')
 
   /** 暂存字节，供口令重试时复用，避免重新下载 */
   let cachedBytes: Uint8Array | undefined
@@ -41,6 +45,8 @@ export function useStoryLoader() {
     cachedBytes = undefined
     doc.value = undefined
     isEncrypted.value = false
+    storyVersion.value = 0
+    storyCompression.value = ''
     errorMessage.value = ''
     passwordError.value = ''
     state.value = 'idle'
@@ -95,6 +101,8 @@ export function useStoryLoader() {
       const result = await unpackStoryBytes(bytes, password)
       doc.value = result.doc
       isEncrypted.value = result.encrypted
+      storyVersion.value = result.version
+      storyCompression.value = result.compression
       state.value = 'ready'
     } catch (err) {
       if (!(err instanceof StoryUnpackError)) {
@@ -182,6 +190,8 @@ export function useStoryLoader() {
     passwordError,
     doc,
     isEncrypted,
+    storyVersion,
+    storyCompression,
     isBusy,
     loadFromS3,
     loadFromFile,

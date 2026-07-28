@@ -42,7 +42,14 @@ export type UnpackErrorCode =
 
 /** worker → 主线程。 */
 export type UnpackResponse =
-  | { id: number; ok: true; doc: StoryDocument; encrypted: boolean }
+  | {
+      id: number
+      ok: true
+      doc: StoryDocument
+      encrypted: boolean
+      version: number
+      compression: string
+    }
   | { id: number; ok: false; code: UnpackErrorCode; message: string }
 
 async function handle(req: UnpackRequest): Promise<UnpackResponse> {
@@ -67,10 +74,24 @@ async function handle(req: UnpackRequest): Promise<UnpackResponse> {
         return { id, ok: false, code: 'need-password', message: '该日志已加密' }
       }
       const doc = await unpackStoryEncrypted(bytes, password)
-      return { id, ok: true, doc, encrypted: true }
+      return {
+        id,
+        ok: true,
+        doc,
+        encrypted: true,
+        version: header.version,
+        compression: header.compression,
+      }
     }
 
-    return { id, ok: true, doc: unpackStory(bytes), encrypted: false }
+    return {
+      id,
+      ok: true,
+      doc: unpackStory(bytes),
+      encrypted: false,
+      version: header.version,
+      compression: header.compression,
+    }
   } catch (err) {
     if (err instanceof StoryDecryptError) {
       return { id, ok: false, code: 'decrypt', message: err.message }

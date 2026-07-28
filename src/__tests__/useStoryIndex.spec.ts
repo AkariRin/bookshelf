@@ -119,7 +119,13 @@ describe('toDisplayEntries', () => {
   it('roll 形状不全时降级为 plain 而非渲染空卡片', () => {
     const doc = makeDoc({
       entries: [
-        { offset: 0, actor: 0, type: 'roll', text: '掷骰失败', roll: { expression: '1d6' } } as never,
+        {
+          offset: 0,
+          actor: 0,
+          type: 'roll',
+          text: '掷骰失败',
+          roll: { expression: '1d6' },
+        } as never,
       ],
     }) as StoryDocument
     expect(toDisplayEntries(doc)[0]?.kind).toBe('plain')

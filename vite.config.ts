@@ -67,7 +67,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    // trpg 是 link 依赖，其 msgpackr / fflate 需显式预构建才能被正确解析
-    include: ['msgpackr', 'fflate', 'workbox-window'],
+    include: ['workbox-window'],
   },
 })

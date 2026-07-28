@@ -25,6 +25,10 @@ export class StoryUnpackError extends Error {
 export interface UnpackResult {
   doc: StoryDocument
   encrypted: boolean
+  /** .story 容器格式版本号 */
+  version: number
+  /** payload 压缩算法 */
+  compression: string
 }
 
 let worker: Worker | undefined
@@ -67,5 +71,10 @@ export async function unpackStoryBytes(
   if (!res.ok) {
     throw new StoryUnpackError(res.code, res.message)
   }
-  return { doc: res.doc, encrypted: res.encrypted }
+  return {
+    doc: res.doc,
+    encrypted: res.encrypted,
+    version: res.version,
+    compression: res.compression,
+  }
 }

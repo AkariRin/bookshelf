@@ -54,10 +54,7 @@ describe('fetchFromS3', () => {
   it('成功时返回字节', async () => {
     withEndpoint(ENDPOINT)
     const payload = new Uint8Array([1, 2, 3])
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(new Response(payload, { status: 200 })),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(payload, { status: 200 })))
 
     await expect(fetchFromS3('a')).resolves.toEqual(payload)
   })
@@ -100,10 +97,7 @@ describe('fetchFromS3', () => {
 
   it('中止请求时原样抛出 AbortError，不包装成 StorySourceError', async () => {
     withEndpoint(ENDPOINT)
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockRejectedValue(new DOMException('Aborted', 'AbortError')),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new DOMException('Aborted', 'AbortError')))
 
     // 主动取消属正常控制流，调用方要能区分它与真实故障
     await expect(fetchFromS3('a')).rejects.toSatisfy(

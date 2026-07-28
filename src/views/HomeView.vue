@@ -2,7 +2,7 @@
 <template>
   <v-container class="py-8" style="max-width: 720px">
     <div class="text-center mb-8">
-      <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48">
+      <img src="/pwa-192x192.png" alt="Bookshelf" width="48" height="48" />
       <h1 class="text-h4 font-weight-bold mt-2">Bookshelf</h1>
       <p class="text-body-2 text-medium-emphasis mt-1">跑团日志阅读器</p>
     </div>
@@ -10,7 +10,6 @@
     <v-card
       class="drop-zone mb-6"
       :class="{ 'drop-zone--active': dragging }"
-      variant="outlined"
       @click="picker?.click()"
       @dragenter.prevent="dragging = true"
       @dragover.prevent="dragging = true"
@@ -26,13 +25,7 @@
       </div>
     </v-card>
 
-    <input
-      ref="picker"
-      type="file"
-      accept=".story"
-      class="d-none"
-      @change="onPick"
-    />
+    <input ref="picker" type="file" accept=".story" class="d-none" @change="onPick" />
 
     <template v-if="hasEndpoint">
       <div class="d-flex align-center ga-3 mb-4">
@@ -82,7 +75,7 @@ const hasEndpoint = hasS3Endpoint()
 
 function openLocal(file: File) {
   setFile(file)
-  void router.push('/local')
+  void router.push('/read')
 }
 
 function onDrop(event: DragEvent) {

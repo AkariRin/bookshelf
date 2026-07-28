@@ -26,7 +26,5 @@ const props = withDefaults(defineProps<{ actor: StoryActor; size?: number }>(), 
 
 const settings = useSettingsStore()
 
-const showRemote = computed(
-  () => settings.loadRemoteAvatars && (props.actor.avatar ?? '') !== '',
-)
+const showRemote = computed(() => settings.loadRemoteAvatars && (props.actor.avatar ?? '') !== '')
 </script>

@@ -12,7 +12,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/local',
+      path: '/read',
       name: 'local',
       component: ReaderView,
       props: { source: 'local' },

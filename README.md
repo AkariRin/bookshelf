@@ -1,6 +1,8 @@
 # Bookshelf
 
-跑团日志阅读器。读取 [trpg](../trpg) 生成的 `.story` 归档，在浏览器中渲染发言时间线、检定卡片与人物卡快照。
+跑团日志阅读器。读取 [Aemeath TRPG Engine](https://github.com/aemeath-projects/trpg/) 生成的 `.story` 归档，在浏览器中渲染发言时间线、检定卡片与人物卡快照。
+
+![License](https://img.shields.io/github/license/AkariRin/bookshelf?style=for-the-badge)
 
 ## 特性
 
@@ -47,7 +49,7 @@ pnpm type-check   # 类型检查
 - **路由**：Vue Router
 - **测试**：Vitest + @vue/test-utils
 - **PWA**：vite-plugin-pwa + Workbox
-- **解析**：[@aemeath-projects/trpg/story](../trpg)，msgpack + gzip 容器，Web Worker 解包
+- **解析**：[@aemeath-projects/trpg/story](https://github.com/aemeath-projects/trpg/tree/master/story)，msgpack + gzip 容器，Web Worker 解包
 
 ## 设计决策
 
