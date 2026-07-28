@@ -46,7 +46,7 @@
               label="日志名称"
               hint="对应远程存储中的文件名，无需输入 .story 后缀"
               prepend-inner-icon="mdi-cloud-outline"
-              variant="outlined"
+              variant="underlined"
               @keydown.enter.prevent="openRemote"
             >
               <template #append>
