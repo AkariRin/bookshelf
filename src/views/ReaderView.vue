@@ -46,7 +46,10 @@
     </template>
 
     <!-- 需要口令 -->
-    <div v-else-if="state === 'need-password'" class="flex-grow-1 d-flex align-center justify-center pa-4">
+    <div
+      v-else-if="state === 'need-password'"
+      class="flex-grow-1 d-flex align-center justify-center pa-4"
+    >
       <div style="max-width: 420px; width: 100%">
         <v-empty-state class="password-empty-state">
           <template #media>
@@ -115,7 +118,9 @@
           <h1 class="text-h4 font-weight-bold">请重新选择文件</h1>
         </template>
         <template #text>
-          <p class="text-body-2 text-medium-emphasis">本地文件只在打开期间保留在内存中，刷新页面后需要重新选择。</p>
+          <p class="text-body-2 text-medium-emphasis">
+            本地文件只在打开期间保留在内存中，刷新页面后需要重新选择。
+          </p>
         </template>
         <template #actions>
           <v-btn color="primary" variant="tonal" @click="router.push('/')">回到首页</v-btn>

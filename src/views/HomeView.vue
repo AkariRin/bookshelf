@@ -57,7 +57,6 @@
             </v-text-field>
           </v-form>
         </template>
-
       </template>
     </v-empty-state>
   </v-container>
