@@ -15,7 +15,7 @@
           <v-btn
             icon="mdi-github"
             v-bind="props"
-            href="https://github.com/AkariRin/bookshelf"
+            :href="githubUrl"
             target="_blank"
             rel="noopener"
           />
@@ -123,6 +123,9 @@ const { title } = useReaderChrome()
 const { needRefresh, offlineReady, updateServiceWorker } = useRegisterSW()
 
 const dialogOpen = ref(false)
+
+// 写成常量而非模板字面量：vue-tsc 3.3.x 的代码生成会把属性值中的双斜杠误判为行注释，导致生成的类型检查代码被截断，进而误报插槽变量未定义
+const githubUrl = 'https://github.com/AkariRin/bookshelf'
 
 const themePreference = computed({
   get: (): ThemePreference => themeStore.preference,

@@ -17,6 +17,10 @@
     // Include Node.js types and avoid accidentally including other `@types/*` packages.
     "types": ["node"],
 
+    // Vite 5 起 configLoader: 'native' 要求配置文件 import 带显式扩展名，
+    // vitest.config.ts 因此写作 ./vite.config.ts
+    "allowImportingTsExtensions": true,
+
     // Disable emitting output during `vue-tsc --build`, which is used for type-checking only.
     "noEmit": true,
 
